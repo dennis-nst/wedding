@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -32,10 +31,9 @@
 
 <!-- Hero -->
 <section id="hero" style="position:relative; height:100svh; min-height:600px; overflow:hidden; background:#1A140F;">
-  <img data-hero-photo src="assets/photo-paris-bw.jpg" alt="" style="position:absolute; left:0; top:-7%; width:100%; height:114%; object-fit:cover; object-position:center 32%; filter:contrast(1.04) brightness(.96);">
+  <img data-hero-photo src="assets/photo-gatchina-color.jpg" alt="" style="position:absolute; left:0; top:-7%; width:100%; height:114%; object-fit:cover; object-position:center 32%;">
   <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(18,14,10,.5) 0%, rgba(18,14,10,.12) 32%, rgba(18,14,10,.2) 60%, rgba(18,14,10,.66) 100%);"></div>
   <div style="position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 42%, transparent 45%, rgba(18,14,10,.45) 100%);"></div>
-  <canvas id="hero-canvas" style="position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none;"></canvas>
   <div style="position:relative; z-index:3; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; text-align:center; padding:clamp(5rem,12vh,8rem) 1.4rem clamp(5rem,12vh,8rem); text-shadow:0 1px 14px rgba(0,0,0,.6), 0 2px 40px rgba(0,0,0,.35);">
     <div>
       <div data-hero-label style="font-family:'Manrope',sans-serif; font-weight:400; font-size:clamp(.62rem,1.4vw,.8rem); letter-spacing:.42em; text-transform:uppercase; color:#ffffff;">Приглашение на роспись</div>
@@ -209,7 +207,7 @@
 <!-- Closing -->
 <section id="closing" style="position:relative; background:#1C1610; color:#EDE5D6; overflow:hidden; padding:clamp(6.5rem,18vh,12rem) clamp(1.5rem,6vw,8rem); display:flex; flex-direction:column; align-items:center; text-align:center;">
   <div data-reveal style="width:clamp(280px,60vw,620px); height:clamp(340px,44vw,520px); overflow:hidden; border-radius:2px; margin-bottom:clamp(2.4rem,6vh,3.6rem);">
-    <img src="assets/photo-gatchina-bw.jpg" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center top;">
+    <img src="assets/photo-paris-color.jpg" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center top;">
   </div>
   <div data-reveal style="font-family:'Manrope',sans-serif; font-weight:400; font-size:.7rem; letter-spacing:.4em; text-transform:uppercase; color:#A4937A; margin-bottom:clamp(1.4rem,3vh,2rem);">До встречи 28 августа</div>
   <h2 data-reveal style="margin:0; font-family:'Forum',serif; font-weight:400; font-size:clamp(2.8rem,11vw,7.5rem); line-height:.98; letter-spacing:.02em; color:#F4EEE1;">
@@ -221,7 +219,7 @@
 
 <script>
 (function () {
-  var cdInterval, rafId, lenis;
+  var cdInterval, lenis;
 
   // Countdown
   function startCountdown() {
@@ -311,102 +309,6 @@
     setTimeout(function () { ST.refresh(); }, 300);
   }
 
-  // Three.js particle layer in hero
-  function initThree() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var THREE = window.THREE;
-    var canvas = document.getElementById('hero-canvas');
-    if (!canvas) return;
-    var renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-    } catch (e) { return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
-    camera.position.z = 14;
-
-    var tc = document.createElement('canvas');
-    tc.width = tc.height = 64;
-    var tx = tc.getContext('2d');
-    var g = tx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    g.addColorStop(0, 'rgba(255,250,238,1)');
-    g.addColorStop(0.28, 'rgba(248,238,218,0.55)');
-    g.addColorStop(1, 'rgba(248,238,218,0)');
-    tx.fillStyle = g;
-    tx.fillRect(0, 0, 64, 64);
-    var tex = new THREE.CanvasTexture(tc);
-
-    var isMobile = window.innerWidth < 768;
-    var N = isMobile ? 60 : 150;
-    var positions = new Float32Array(N * 3);
-    var speeds = new Float32Array(N);
-    for (var i = 0; i < N; i++) {
-      positions[i * 3]     = (Math.random() - 0.5) * 28;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 18;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
-      speeds[i] = 0.2 + Math.random() * 0.7;
-    }
-    var geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    var mat = new THREE.PointsMaterial({
-      size: isMobile ? 0.24 : 0.18, map: tex, transparent: true,
-      depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.7, color: 0xF3ECDD
-    });
-    var pts = new THREE.Points(geo, mat);
-    scene.add(pts);
-
-    var mx = 0, my = 0;
-    window.addEventListener('pointermove', function (e) {
-      mx = (e.clientX / window.innerWidth - 0.5);
-      my = (e.clientY / window.innerHeight - 0.5);
-    });
-
-    // Scroll velocity tracking
-    var scrollVel = 0;
-    var lastScrollY = window.scrollY;
-    window.addEventListener('scroll', function () {
-      var delta = window.scrollY - lastScrollY;
-      lastScrollY = window.scrollY;
-      // Normalise: each pixel of scroll adds a small burst, capped at 6×
-      scrollVel += delta * 0.003;
-      scrollVel = Math.max(-0.18, Math.min(0.18, scrollVel));
-    }, { passive: true });
-
-    var resize = function () {
-      var w = canvas.clientWidth, h = canvas.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    var clock = new THREE.Clock();
-    var animate = function () {
-      rafId = requestAnimationFrame(animate);
-      var t = clock.getElapsedTime();
-      var pos = geo.attributes.position.array;
-      // Base speed + scroll burst applied to every particle
-      var boost = 0.0045 + scrollVel;
-      for (var j = 0; j < N; j++) {
-        pos[j * 3 + 1] += boost * speeds[j];
-        if (pos[j * 3 + 1] > 9) pos[j * 3 + 1] = -9;
-        pos[j * 3] += Math.sin(t * 0.25 + j) * 0.0012;
-      }
-      geo.attributes.position.needsUpdate = true;
-      // Decay scroll velocity back to 0
-      scrollVel *= 0.88;
-      camera.position.x += (mx * 1.6 - camera.position.x) * 0.04;
-      camera.position.y += (-my * 1.1 - camera.position.y) * 0.04;
-      camera.lookAt(0, 0, 0);
-      renderer.render(scene, camera);
-    };
-    animate();
-  }
-
   // Boot
   document.addEventListener('DOMContentLoaded', function () {
     startCountdown();
@@ -421,22 +323,10 @@
         clearInterval(gsapPoll);
       }
     }, 50);
-
-    var threeTries = 0;
-    var threePoll = setInterval(function () {
-      threeTries++;
-      if (window.THREE) {
-        clearInterval(threePoll);
-        initThree();
-      } else if (threeTries > 120) {
-        clearInterval(threePoll);
-      }
-    }, 50);
   });
 
   window.addEventListener('beforeunload', function () {
     clearInterval(cdInterval);
-    if (rafId) cancelAnimationFrame(rafId);
     if (lenis) lenis.destroy();
     if (window.ScrollTrigger) window.ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
   });
