@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Денис &amp; Карина · 28.08.2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #1C1610; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+  * { box-sizing: border-box; }
+  ::selection { background: #C9B58E; color: #1C1610; }
+  img { display: block; }
+  a { color: inherit; }
+  @keyframes scrollPulse { 0%,100%{ transform:translateY(0); opacity:.35 } 50%{ transform:translateY(10px); opacity:.9 } }
+  @keyframes haloSpin { to { transform:rotate(360deg) } }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div style="position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:clamp(1.1rem,2.6vw,1.8rem) clamp(1.5rem,5vw,3.2rem); pointer-events:none; mix-blend-mode:difference; color:#ffffff;">
+  <span style="font-family:'Forum',serif; font-size:clamp(1rem,1.6vw,1.25rem); letter-spacing:.12em;">Д&nbsp;<span style="font-size:.75em; vertical-align:.05em;">♥</span>&nbsp;К</span>
+  <span style="font-family:'Manrope',sans-serif; font-weight:400; font-size:clamp(.6rem,1.1vw,.72rem); letter-spacing:.34em; text-transform:uppercase;">28.08.2026</span>
+</div>
+
+<!-- Hero -->
+<section id="hero" style="position:relative; height:100svh; min-height:600px; overflow:hidden; background:#1A140F;">
+  <img data-hero-photo src="assets/photo-paris-bw.jpg" alt="" style="position:absolute; left:0; top:-7%; width:100%; height:114%; object-fit:cover; object-position:center 32%; filter:contrast(1.04) brightness(.96);">
+  <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(18,14,10,.5) 0%, rgba(18,14,10,.12) 32%, rgba(18,14,10,.2) 60%, rgba(18,14,10,.66) 100%);"></div>
+  <div style="position:absolute; inset:0; background:radial-gradient(120% 90% at 50% 42%, transparent 45%, rgba(18,14,10,.45) 100%);"></div>
+  <canvas id="hero-canvas" style="position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none;"></canvas>
+  <div style="position:relative; z-index:3; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; text-align:center; padding:clamp(5rem,12vh,8rem) 1.4rem clamp(5rem,12vh,8rem); text-shadow:0 1px 14px rgba(0,0,0,.6), 0 2px 40px rgba(0,0,0,.35);">
+    <div>
+      <div data-hero-label style="font-family:'Manrope',sans-serif; font-weight:400; font-size:clamp(.62rem,1.4vw,.8rem); letter-spacing:.42em; text-transform:uppercase; color:#ffffff;">Приглашение на роспись</div>
+      <h1 data-hero-name style="margin:clamp(1.1rem,3.2vh,2rem) 0 0; font-family:'Forum',serif; font-weight:400; color:#F5EFE2; font-size:clamp(3.1rem,13vw,10.5rem); line-height:.96; letter-spacing:.015em;">
+        <span style="display:inline-block;">Денис</span>
+        <span style="display:inline-block; font-family:'Cormorant',serif; font-style:italic; font-weight:500; font-size:.46em; vertical-align:middle; margin:0 .12em; color:#CBB78D;">&amp;</span>
+        <span style="display:inline-block;">Карина</span>
+      </h1>
+    </div>
+    <div data-hero-meta style="display:flex; gap:clamp(.9rem,3vw,2.2rem); align-items:center; color:#ffffff; font-family:'Manrope',sans-serif; font-weight:400; letter-spacing:.3em; text-transform:uppercase; font-size:clamp(.6rem,1.4vw,.78rem);">
+      <span>28 августа 2026</span>
+      <span style="width:5px; height:5px; border-radius:50%; background:#CBB78D;"></span>
+      <span>Санкт-Петербург</span>
+    </div>
+  </div>
+</section>
+
+<!-- Intro -->
+<section id="intro" style="background:#F2EBDF; color:#2A231A; padding:clamp(6rem,17vh,12rem) clamp(1.5rem,6vw,8rem); display:flex; flex-direction:column; align-items:center; text-align:center;">
+  <div data-reveal style="display:flex; flex-direction:column; align-items:center; gap:1.1rem; margin-bottom:clamp(2.4rem,6vh,4rem);">
+    <span style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.72rem; letter-spacing:.4em; text-transform:uppercase; color:#9A8C76;">Дорогим гостям</span>
+    <span style="width:1px; height:46px; background:linear-gradient(#B9A98C, transparent);"></span>
+  </div>
+  <p id="intro-phrase" style="max-width:22ch; margin:0; font-family:'Cormorant',serif; font-weight:500; font-style:italic; font-size:clamp(1.7rem,4.4vw,3.1rem); line-height:1.36; color:#241D14;">
+    <span data-line style="display:block;">«Будем счастливы</span>
+    <span data-line style="display:block;">разделить с вами</span>
+    <span data-line style="display:block;">один из самых важных</span>
+    <span data-line style="display:block;">дней нашей жизни —</span>
+    <span data-line style="display:block;">тёплый вечер без</span>
+    <span data-line style="display:block;">формальностей, среди</span>
+    <span data-line style="display:block;">самых близких.»</span>
+  </p>
+  <div data-reveal style="margin-top:clamp(2.6rem,6vh,4rem); font-family:'Forum',serif; font-size:clamp(1.1rem,2.2vw,1.5rem); letter-spacing:.04em; color:#6E614E;">Денис&nbsp;и&nbsp;Карина</div>
+</section>
+
+<!-- Countdown + Calendar -->
+<section id="count" style="background:#ECE3D2; color:#2A231A; padding:clamp(5.5rem,14vh,10rem) clamp(1.5rem,6vw,8rem); display:flex; flex-direction:column; align-items:center;">
+  <div data-reveal style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.72rem; letter-spacing:.4em; text-transform:uppercase; color:#9A8C76; margin-bottom:clamp(2.4rem,5vh,3.4rem);">До росписи осталось</div>
+  <div data-reveal style="display:flex; align-items:flex-start; justify-content:center; gap:clamp(1.1rem,4.5vw,3.4rem); flex-wrap:wrap;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:.5rem; min-width:64px;"><span id="cd-days" style="font-family:'Forum',serif; font-size:clamp(2.8rem,8vw,5.5rem); line-height:1; color:#241D14;">—</span><span style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.64rem; letter-spacing:.26em; text-transform:uppercase; color:#9A8C76;">дней</span></div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:.5rem; min-width:64px;"><span id="cd-hours" style="font-family:'Forum',serif; font-size:clamp(2.8rem,8vw,5.5rem); line-height:1; color:#241D14;">—</span><span style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.64rem; letter-spacing:.26em; text-transform:uppercase; color:#9A8C76;">часов</span></div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:.5rem; min-width:64px;"><span id="cd-mins" style="font-family:'Forum',serif; font-size:clamp(2.8rem,8vw,5.5rem); line-height:1; color:#241D14;">—</span><span style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.64rem; letter-spacing:.26em; text-transform:uppercase; color:#9A8C76;">минут</span></div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:.5rem; min-width:64px;"><span id="cd-secs" style="font-family:'Forum',serif; font-size:clamp(2.8rem,8vw,5.5rem); line-height:1; color:#241D14;">—</span><span style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.64rem; letter-spacing:.26em; text-transform:uppercase; color:#9A8C76;">секунд</span></div>
+  </div>
+
+  <div data-reveal style="width:100%; max-width:420px; margin-top:clamp(3.4rem,8vh,5.5rem);">
+    <div style="text-align:center; font-family:'Forum',serif; font-size:clamp(1.5rem,3.4vw,2.1rem); letter-spacing:.06em; color:#3A3122; margin-bottom:clamp(1.4rem,3vh,2rem);">Август&nbsp;2026</div>
+    <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px 0; font-family:'Manrope',sans-serif;">
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#A2937C; padding-bottom:.7rem;">пн</span>
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#A2937C; padding-bottom:.7rem;">вт</span>
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#A2937C; padding-bottom:.7rem;">ср</span>
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#A2937C; padding-bottom:.7rem;">чт</span>
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#A2937C; padding-bottom:.7rem;">пт</span>
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#A2937C; padding-bottom:.7rem;">сб</span>
+      <span style="text-align:center; font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#C9A98A; padding-bottom:.7rem;">вс</span>
+      <!-- Week 1: Aug 1 = Sat -->
+      <span></span><span></span><span></span><span></span><span></span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">1</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#B8907A;">2</span>
+      <!-- Week 2 -->
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">3</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">4</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">5</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">6</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">7</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">8</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#B8907A;">9</span>
+      <!-- Week 3 -->
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">10</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">11</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">12</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">13</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">14</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">15</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#B8907A;">16</span>
+      <!-- Week 4 -->
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">17</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">18</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">19</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">20</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">21</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">22</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#B8907A;">23</span>
+      <!-- Week 5 -->
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">24</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">25</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">26</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">27</span>
+      <span data-wed-day style="position:relative; display:flex; align-items:center; justify-content:center; padding:.55rem 0; font-size:.95rem; color:#1C1610;">
+        <span style="position:absolute; width:34px; height:34px; border-radius:50%; background:#1C1610; z-index:0;"></span>
+        <span style="position:relative; z-index:1; color:#F2EBDF; font-weight:500;">28</span>
+      </span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">29</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#B8907A;">30</span>
+      <span style="text-align:center; padding:.55rem 0; font-size:.92rem; color:#4A4030;">31</span>
+    </div>
+    <div style="text-align:center; margin-top:clamp(1.4rem,3vh,2rem); font-family:'Manrope',sans-serif; font-weight:400; font-size:.74rem; letter-spacing:.24em; text-transform:uppercase; color:#9A8C76;">пятница · 28 августа</div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section id="timeline" style="background:#1C1610; color:#EDE5D6; padding:clamp(6rem,16vh,11rem) clamp(1.5rem,6vw,8rem);">
+  <div data-reveal style="text-align:center; margin-bottom:clamp(3.2rem,8vh,5rem);">
+    <div style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.72rem; letter-spacing:.4em; text-transform:uppercase; color:#A4937A; margin-bottom:1.2rem;">28 августа · вечер</div>
+    <h2 style="margin:0; font-family:'Forum',serif; font-weight:400; font-size:clamp(2.2rem,5.5vw,4rem); letter-spacing:.02em; color:#F2EBDF;">Течение вечера</h2>
+  </div>
+  <div style="position:relative; max-width:680px; margin:0 auto;">
+
+    <div data-reveal style="position:relative; text-align:center; padding:clamp(1.8rem,4.5vh,3rem) 0;">
+      <span style="display:block; width:10px; height:10px; border-radius:50%; background:#C9B58E; margin:0 auto clamp(1rem,2.4vh,1.5rem); box-shadow:0 0 0 7px #1C1610;"></span>
+      <div style="font-family:'Forum',serif; font-size:clamp(1.9rem,4.5vw,2.9rem); letter-spacing:.04em; color:#F2EBDF;">19:20</div>
+      <div style="margin-top:.7rem; font-family:'Manrope',sans-serif; font-weight:500; font-size:clamp(.82rem,1.6vw,.98rem); letter-spacing:.04em; color:#E1D7C4;">Сбор гостей</div>
+      <div style="margin-top:.45rem; font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(.78rem,1.5vw,.92rem); line-height:1.7; color:#A99C86; max-width:30ch; margin-left:auto; margin-right:auto;">Дворец бракосочетания №1 · встречаемся, обнимаемся, ловим первые улыбки вечера</div>
+    </div>
+
+    <div data-reveal style="position:relative; text-align:center; padding:clamp(1.8rem,4.5vh,3rem) 0;">
+      <span style="display:block; width:10px; height:10px; border-radius:50%; background:#C9B58E; margin:0 auto clamp(1rem,2.4vh,1.5rem); box-shadow:0 0 0 7px #1C1610;"></span>
+      <div style="font-family:'Forum',serif; font-size:clamp(1.9rem,4.5vw,2.9rem); letter-spacing:.04em; color:#F2EBDF;">19:40</div>
+      <div style="margin-top:.7rem; font-family:'Manrope',sans-serif; font-weight:500; font-size:clamp(.82rem,1.6vw,.98rem); letter-spacing:.04em; color:#E1D7C4;">Церемония</div>
+      <div style="margin-top:.45rem; font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(.78rem,1.5vw,.92rem); line-height:1.7; color:#A99C86; max-width:30ch; margin-left:auto; margin-right:auto;">Те самые главные слова — при свидетелях наших сердец</div>
+    </div>
+
+    <div data-reveal style="position:relative; text-align:center; padding:clamp(1.8rem,4.5vh,3rem) 0;">
+      <span style="display:block; width:10px; height:10px; border-radius:50%; background:#C9B58E; margin:0 auto clamp(1rem,2.4vh,1.5rem); box-shadow:0 0 0 7px #1C1610;"></span>
+      <div style="font-family:'Forum',serif; font-size:clamp(1.9rem,4.5vw,2.9rem); letter-spacing:.04em; color:#F2EBDF;">20:00</div>
+      <div style="margin-top:.7rem; font-family:'Manrope',sans-serif; font-weight:500; font-size:clamp(.82rem,1.6vw,.98rem); letter-spacing:.04em; color:#E1D7C4;">Праздничный ужин</div>
+      <div style="margin-top:.45rem; font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(.78rem,1.5vw,.92rem); line-height:1.7; color:#A99C86; max-width:30ch; margin-left:auto; margin-right:auto;">Ресторан «Горизонты» · тёплый вечер, тосты, музыка и танцы</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Venue -->
+<section id="venue" style="background:#F2EBDF; color:#2A231A; padding:clamp(6rem,16vh,11rem) clamp(1.5rem,6vw,8rem);">
+  <div data-reveal style="text-align:center; margin-bottom:clamp(3.2rem,8vh,5rem);">
+    <div style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.72rem; letter-spacing:.4em; text-transform:uppercase; color:#9A8C76; margin-bottom:1.2rem;">Где всё случится</div>
+    <h2 style="margin:0; font-family:'Forum',serif; font-weight:400; font-size:clamp(2.2rem,5.5vw,4rem); letter-spacing:.02em; color:#241D14;">Место торжества</h2>
+  </div>
+
+  <div style="max-width:780px; margin:0 auto;">
+    <div style="display:flex; flex-direction:column; gap:clamp(2.4rem,5vh,3.6rem);">
+      <div data-reveal style="border-top:1px solid rgba(42,35,26,.18); padding-top:clamp(1.4rem,3vh,2rem);">
+        <div style="font-family:'Forum',serif; font-size:1rem; color:#B0987A; letter-spacing:.1em; margin-bottom:.8rem;">01</div>
+        <h3 style="margin:0 0 .7rem; font-family:'Forum',serif; font-weight:400; font-size:clamp(1.5rem,3vw,2.1rem); letter-spacing:.02em; color:#241D14;">Дворец бракосочетания №1</h3>
+        <p style="margin:0 0 .5rem; font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(.85rem,1.5vw,.96rem); line-height:1.7; color:#5E523F;">Английская набережная, 28 · Санкт-Петербург</p>
+        <p style="margin:0 0 1.2rem; font-family:'Manrope',sans-serif; font-weight:400; font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:#9A8C76;">Сбор 19:20 · церемония 19:40</p>
+        <a href="https://yandex.ru/maps/?text=Английская%20набережная%2028%20Санкт-Петербург" target="_blank" rel="noopener" data-magnet style="display:inline-flex; align-items:center; gap:.6rem; font-family:'Manrope',sans-serif; font-weight:500; font-size:.74rem; letter-spacing:.18em; text-transform:uppercase; color:#241D14; text-decoration:none; border-bottom:1px solid rgba(42,35,26,.35); padding-bottom:.35rem;">Смотреть на карте <span style="font-size:1rem;">→</span></a>
+      </div>
+      <div data-reveal style="border-top:1px solid rgba(42,35,26,.18); padding-top:clamp(1.4rem,3vh,2rem);">
+        <div style="font-family:'Forum',serif; font-size:1rem; color:#B0987A; letter-spacing:.1em; margin-bottom:.8rem;">02</div>
+        <h3 style="margin:0 0 .7rem; font-family:'Forum',serif; font-weight:400; font-size:clamp(1.5rem,3vw,2.1rem); letter-spacing:.02em; color:#241D14;">Ресторан «Горизонты»</h3>
+        <p style="margin:0 0 .5rem; font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(.85rem,1.5vw,.96rem); line-height:1.7; color:#5E523F;">Санкт-Петербург · праздничный ужин</p>
+        <p style="margin:0 0 1.2rem; font-family:'Manrope',sans-serif; font-weight:400; font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:#9A8C76;">Начало в 20:00</p>
+        <a href="https://yandex.ru/maps/?text=Ресторан%20Горизонты%20Санкт-Петербург" target="_blank" rel="noopener" data-magnet style="display:inline-flex; align-items:center; gap:.6rem; font-family:'Manrope',sans-serif; font-weight:500; font-size:.74rem; letter-spacing:.18em; text-transform:uppercase; color:#241D14; text-decoration:none; border-bottom:1px solid rgba(42,35,26,.35); padding-bottom:.35rem;">Смотреть на карте <span style="font-size:1rem;">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RSVP -->
+<section id="rsvp" style="background:#ECE3D2; color:#2A231A; padding:clamp(6rem,16vh,11rem) clamp(1.5rem,6vw,8rem); display:flex; flex-direction:column; align-items:center; text-align:center;">
+  <div data-reveal style="font-family:'Manrope',sans-serif; font-weight:500; font-size:.72rem; letter-spacing:.4em; text-transform:uppercase; color:#9A8C76; margin-bottom:1.4rem;">Подтверждение</div>
+  <h2 data-reveal style="margin:0; max-width:16ch; font-family:'Forum',serif; font-weight:400; font-size:clamp(2.1rem,5.5vw,3.8rem); line-height:1.08; letter-spacing:.02em; color:#241D14;">Будем ждать вашего ответа</h2>
+  <p data-reveal style="margin:clamp(1.4rem,3vh,2rem) 0 0; max-width:38ch; font-family:'Manrope',sans-serif; font-weight:300; font-size:clamp(.92rem,1.7vw,1.08rem); line-height:1.75; color:#5E523F;">Пожалуйста, дайте знать, сможете ли вы быть рядом в Телеграм или в форме:</p>
+  <div data-reveal style="margin-top:clamp(2.4rem,5vh,3.4rem);">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdCv-lfWMrjKMDC4n0rcqE83JZWyqXfjp37NsbEnNLo0JfxlQ/viewform?usp=dialog" target="_blank" rel="noopener" data-magnet style="display:inline-flex; align-items:center; gap:.7rem; padding:1.05rem 2.8rem; background:#1C1610; color:#F2EBDF; font-family:'Manrope',sans-serif; font-weight:500; font-size:.76rem; letter-spacing:.2em; text-transform:uppercase; text-decoration:none; border-radius:2px;">Подтвердить</a>
+  </div>
+  <p data-reveal style="margin:clamp(2rem,4vh,2.6rem) 0 0; font-family:'Manrope',sans-serif; font-weight:400; font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:#A2937C;">Будем благодарны за ответ заранее</p>
+</section>
+
+<!-- Closing -->
+<section id="closing" style="position:relative; background:#1C1610; color:#EDE5D6; overflow:hidden; padding:clamp(6.5rem,18vh,12rem) clamp(1.5rem,6vw,8rem); display:flex; flex-direction:column; align-items:center; text-align:center;">
+  <div data-reveal style="width:clamp(280px,60vw,620px); height:clamp(340px,44vw,520px); overflow:hidden; border-radius:2px; margin-bottom:clamp(2.4rem,6vh,3.6rem);">
+    <img src="assets/photo-gatchina-bw.jpg" alt="" style="width:100%; height:100%; object-fit:cover; object-position:center top;">
+  </div>
+  <div data-reveal style="font-family:'Manrope',sans-serif; font-weight:400; font-size:.7rem; letter-spacing:.4em; text-transform:uppercase; color:#A4937A; margin-bottom:clamp(1.4rem,3vh,2rem);">До встречи 28 августа</div>
+  <h2 data-reveal style="margin:0; font-family:'Forum',serif; font-weight:400; font-size:clamp(2.8rem,11vw,7.5rem); line-height:.98; letter-spacing:.02em; color:#F4EEE1;">
+    Денис <span style="font-family:'Cormorant',serif; font-style:italic; font-weight:500; font-size:.42em; color:#CBB78D; vertical-align:middle;">&amp;</span> Карина
+  </h2>
+  <p data-reveal style="margin:clamp(1.8rem,4vh,2.6rem) 0 0; max-width:30ch; font-family:'Cormorant',serif; font-style:italic; font-weight:500; font-size:clamp(1.2rem,2.6vw,1.6rem); line-height:1.5; color:#CDC2AC;">С нетерпением ждём встречи — с теплом и любовью</p>
+  <div data-reveal style="margin-top:clamp(2.8rem,7vh,4.2rem); font-family:'Manrope',sans-serif; font-weight:400; font-size:.66rem; letter-spacing:.32em; text-transform:uppercase; color:#7C6F5B;">28.08.2026 · Санкт-Петербург</div>
+</section>
+
+<script>
+(function () {
+  var cdInterval, rafId, lenis;
+
+  // Countdown
+  function startCountdown() {
+    var target = new Date('2026-08-28T19:20:00+03:00').getTime();
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var set = function (id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+    var tick = function () {
+      var diff = Math.max(0, target - Date.now());
+      var d = Math.floor(diff / 86400000); diff -= d * 86400000;
+      var h = Math.floor(diff / 3600000); diff -= h * 3600000;
+      var m = Math.floor(diff / 60000); diff -= m * 60000;
+      var s = Math.floor(diff / 1000);
+      set('cd-days', String(d));
+      set('cd-hours', pad(h));
+      set('cd-mins', pad(m));
+      set('cd-secs', pad(s));
+    };
+    tick();
+    cdInterval = setInterval(tick, 1000);
+  }
+
+  // GSAP + Lenis scroll init
+  function initScroll() {
+    var gsap = window.gsap, ST = window.ScrollTrigger;
+    gsap.registerPlugin(ST);
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (window.Lenis && !reduce) {
+      lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
+      lenis.on('scroll', ST.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    // Hero entrance
+    var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('[data-hero-label]', { y: 22, opacity: 0, duration: 1, delay: 0.15 })
+      .from('[data-hero-name] > span', { y: 70, opacity: 0, duration: 1.25, stagger: 0.12 }, '-=0.55')
+      .from('[data-hero-meta]', { y: 22, opacity: 0, duration: 1 }, '-=0.7')
+      .from('[data-scrollcue]', { opacity: 0, duration: 1 }, '-=0.4');
+
+    if (!reduce) {
+      gsap.to('[data-hero-photo]', { yPercent: 16, scale: 1.12, ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+    }
+
+    // Intro phrase line by line
+    gsap.from('#intro-phrase [data-line]', {
+      y: 36, opacity: 0, duration: 1.1, stagger: 0.13, ease: 'power3.out',
+      scrollTrigger: { trigger: '#intro-phrase', start: 'top 80%' }
+    });
+
+    // Generic reveals
+    gsap.utils.toArray('[data-reveal]').forEach(function (el) {
+      gsap.from(el, { y: 44, opacity: 0, duration: 1.1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' } });
+    });
+
+    // Wedding-day calendar cell pop
+    var wed = document.querySelector('[data-wed-day]');
+    if (wed) {
+      gsap.from(wed, { scale: 0.4, opacity: 0, duration: 0.9, ease: 'back.out(2)',
+        scrollTrigger: { trigger: wed, start: 'top 90%' } });
+    }
+
+    // Parallax images
+    if (!reduce) {
+      gsap.utils.toArray('[data-parallax]').forEach(function (el) {
+        gsap.to(el, { yPercent: -9, ease: 'none',
+          scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+      });
+    }
+
+    // Magnetic buttons
+    if (!reduce && window.matchMedia('(hover:hover)').matches) {
+      gsap.utils.toArray('[data-magnet]').forEach(function (el) {
+        var move = function (e) {
+          var r = el.getBoundingClientRect();
+          gsap.to(el, { x: (e.clientX - (r.left + r.width / 2)) * 0.25, y: (e.clientY - (r.top + r.height / 2)) * 0.4, duration: 0.5, ease: 'power3.out' });
+        };
+        var reset = function () { gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.4)' }); };
+        el.addEventListener('pointermove', move);
+        el.addEventListener('pointerleave', reset);
+      });
+    }
+
+    setTimeout(function () { ST.refresh(); }, 300);
+  }
+
+  // Three.js particle layer in hero
+  function initThree() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var THREE = window.THREE;
+    var canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    } catch (e) { return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+    camera.position.z = 14;
+
+    var tc = document.createElement('canvas');
+    tc.width = tc.height = 64;
+    var tx = tc.getContext('2d');
+    var g = tx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, 'rgba(255,250,238,1)');
+    g.addColorStop(0.28, 'rgba(248,238,218,0.55)');
+    g.addColorStop(1, 'rgba(248,238,218,0)');
+    tx.fillStyle = g;
+    tx.fillRect(0, 0, 64, 64);
+    var tex = new THREE.CanvasTexture(tc);
+
+    var isMobile = window.innerWidth < 768;
+    var N = isMobile ? 60 : 150;
+    var positions = new Float32Array(N * 3);
+    var speeds = new Float32Array(N);
+    for (var i = 0; i < N; i++) {
+      positions[i * 3]     = (Math.random() - 0.5) * 28;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 18;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      speeds[i] = 0.2 + Math.random() * 0.7;
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    var mat = new THREE.PointsMaterial({
+      size: isMobile ? 0.24 : 0.18, map: tex, transparent: true,
+      depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.7, color: 0xF3ECDD
+    });
+    var pts = new THREE.Points(geo, mat);
+    scene.add(pts);
+
+    var mx = 0, my = 0;
+    window.addEventListener('pointermove', function (e) {
+      mx = (e.clientX / window.innerWidth - 0.5);
+      my = (e.clientY / window.innerHeight - 0.5);
+    });
+
+    // Scroll velocity tracking
+    var scrollVel = 0;
+    var lastScrollY = window.scrollY;
+    window.addEventListener('scroll', function () {
+      var delta = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+      // Normalise: each pixel of scroll adds a small burst, capped at 6×
+      scrollVel += delta * 0.003;
+      scrollVel = Math.max(-0.18, Math.min(0.18, scrollVel));
+    }, { passive: true });
+
+    var resize = function () {
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    var clock = new THREE.Clock();
+    var animate = function () {
+      rafId = requestAnimationFrame(animate);
+      var t = clock.getElapsedTime();
+      var pos = geo.attributes.position.array;
+      // Base speed + scroll burst applied to every particle
+      var boost = 0.0045 + scrollVel;
+      for (var j = 0; j < N; j++) {
+        pos[j * 3 + 1] += boost * speeds[j];
+        if (pos[j * 3 + 1] > 9) pos[j * 3 + 1] = -9;
+        pos[j * 3] += Math.sin(t * 0.25 + j) * 0.0012;
+      }
+      geo.attributes.position.needsUpdate = true;
+      // Decay scroll velocity back to 0
+      scrollVel *= 0.88;
+      camera.position.x += (mx * 1.6 - camera.position.x) * 0.04;
+      camera.position.y += (-my * 1.1 - camera.position.y) * 0.04;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    };
+    animate();
+  }
+
+  // Boot
+  document.addEventListener('DOMContentLoaded', function () {
+    startCountdown();
+
+    var gsapTries = 0;
+    var gsapPoll = setInterval(function () {
+      gsapTries++;
+      if (window.gsap && window.ScrollTrigger) {
+        clearInterval(gsapPoll);
+        initScroll();
+      } else if (gsapTries > 120) {
+        clearInterval(gsapPoll);
+      }
+    }, 50);
+
+    var threeTries = 0;
+    var threePoll = setInterval(function () {
+      threeTries++;
+      if (window.THREE) {
+        clearInterval(threePoll);
+        initThree();
+      } else if (threeTries > 120) {
+        clearInterval(threePoll);
+      }
+    }, 50);
+  });
+
+  window.addEventListener('beforeunload', function () {
+    clearInterval(cdInterval);
+    if (rafId) cancelAnimationFrame(rafId);
+    if (lenis) lenis.destroy();
+    if (window.ScrollTrigger) window.ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
+  });
+})();
+</script>
+</body>
+</html>
